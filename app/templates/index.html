@@ -1,150 +1,223 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="dashboard-grid">
-    <!-- Main Content Area -->
-    <div class="main-content">
-        <!-- Hero Section -->
-        <div class="golden-card" style="background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, rgba(37,99,235,0.1) 100%);">
-            <div style="text-align: center; padding: 3rem 2rem;">
-                <h1 style="font-size: 3.5rem; margin-bottom: 1rem;" class="golden-gradient">
-                    The Future of Finance is Here
-                </h1>
-                <p style="font-size: 1.25rem; color: var(--text-muted); margin-bottom: 2rem;">
-                    Experience the world's first 5-pillar financial ecosystem. 
-                    Powered by AI, driven by innovation.
-                </p>
-                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-                    <button style="background: var(--primary-gold); color: var(--dark-bg); border: none; padding: 1rem 2rem; border-radius: 50px; font-weight: 600; cursor: pointer;">
-                        <i class="fas fa-rocket"></i> Launch Dashboard
-                    </button>
-                    <button style="background: transparent; color: var(--primary-gold); border: 2px solid var(--primary-gold); padding: 1rem 2rem; border-radius: 50px; font-weight: 600; cursor: pointer;">
-                        <i class="fas fa-play-circle"></i> Watch Demo
-                    </button>
-                </div>
-            </div>
+<!-- Hero Section -->
+<div class="hero-section">
+    <h1 class="hero-title">The Future of Finance is Here</h1>
+    <p class="hero-subtitle">
+        Experience the world's first 5-pillar financial ecosystem. 
+        Powered by AI, driven by innovation, built for you.
+    </p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="/wealth-guide" class="action-btn">
+            <i class="fas fa-rocket"></i> Start Investing
+        </a>
+        <a href="#features" class="secondary-btn">
+            <i class="fas fa-play-circle"></i> See Features
+        </a>
+    </div>
+</div>
+
+<!-- Features Grid -->
+<div id="features" class="cards-grid">
+    <!-- Wealth Guide Card -->
+    <div class="glass-card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-gem" style="color: var(--primary-gold);"></i>
+                Wealth Guide
+            </h3>
+            <i class="fas fa-robot" style="color: var(--accent-blue);"></i>
         </div>
-
-        <!-- Pillars Showcase -->
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
-            <!-- Wealth Guide Card -->
-            <div class="golden-card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-gem" style="color: var(--primary-gold);"></i>
-                        Wealth Guide
-                    </h3>
-                    <i class="fas fa-robot" style="color: var(--accent-blue);"></i>
+        <div class="card-content">
+            <p style="color: var(--text-muted);">
+                AI-powered financial guidance tailored to your goals and risk profile.
+            </p>
+            <div style="background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Risk Profile</span>
+                    <span style="color: var(--primary-gold);">Moderate</span>
                 </div>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
-                    AI-powered financial guidance tailored to your goals and risk profile.
-                </p>
-                <div style="background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                        <span>Risk Profile</span>
-                        <span style="color: var(--primary-gold);">Moderate</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span>Recommended Allocation</span>
-                        <span style="color: var(--success-green);">$15,000</span>
-                    </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>AI Confidence</span>
+                    <span style="color: var(--accent-emerald);">87%</span>
                 </div>
             </div>
-
-            <!-- Vault Manager Card -->
-            <div class="golden-card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-vault" style="color: var(--primary-gold);"></i>
-                        Vault Manager
-                    </h3>
-                    <i class="fas fa-chart-line" style="color: var(--success-green);"></i>
-                </div>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
-                    Comprehensive portfolio management with real-time performance tracking.
-                </p>
-                <div style="background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                        <span>Total Portfolio</span>
-                        <span style="color: var(--primary-gold);">$45,230.15</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span>Today's Change</span>
-                        <span style="color: var(--success-green);">+$1,234.56</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Market Pulse Card -->
-            <div class="golden-card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-heartbeat" style="color: var(--primary-gold);"></i>
-                        Market Pulse
-                    </h3>
-                    <i class="fas fa-bolt" style="color: var(--danger-red);"></i>
-                </div>
-                <p style="color: var(--text-muted); margin-bottom: 1.5rem;">
-                    Live market data, news, and trends that matter to your investments.
-                </p>
-                <div style="background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                        <span>AAPL</span>
-                        <span style="color: var(--success-green);">+1.23%</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between;">
-                        <span>Market Sentiment</span>
-                        <span style="color: var(--primary-gold);">Bullish</span>
-                    </div>
-                </div>
-            </div>
+            <a href="/wealth-guide" class="action-btn" style="margin-top: auto;">
+                <i class="fas fa-chart-line"></i> Get Recommendations
+            </a>
         </div>
     </div>
 
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <!-- Quick Actions -->
-        <div class="golden-card">
+    <!-- Vault Manager Card -->
+    <div class="glass-card">
+        <div class="card-header">
             <h3 class="card-title">
-                <i class="fas fa-bolt" style="color: var(--primary-gold);"></i>
-                Quick Actions
+                <i class="fas fa-vault" style="color: var(--primary-gold);"></i>
+                Vault Manager
             </h3>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-                <button style="background: rgba(37,99,235,0.2); border: 1px solid var(--accent-blue); color: var(--text-light); padding: 1rem; border-radius: 10px; cursor: pointer; text-align: left;">
-                    <i class="fas fa-plus-circle"></i> New Investment
-                </button>
-                <button style="background: rgba(16,185,129,0.2); border: 1px solid var(--success-green); color: var(--text-light); padding: 1rem; border-radius: 10px; cursor: pointer; text-align: left;">
-                    <i class="fas fa-chart-pie"></i> Portfolio Analysis
-                </button>
-                <button style="background: rgba(239,68,68,0.2); border: 1px solid var(--danger-red); color: var(--text-light); padding: 1rem; border-radius: 10px; cursor: pointer; text-align: left;">
-                    <i class="fas fa-bell"></i> Market Alerts
-                </button>
-            </div>
+            <i class="fas fa-chart-line" style="color: var(--accent-emerald);"></i>
         </div>
+        <div class="card-content">
+            <p style="color: var(--text-muted);">
+                Comprehensive portfolio management with real-time performance tracking.
+            </p>
+            <div style="background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Total Portfolio</span>
+                    <span style="color: var(--primary-gold);">$45,230.15</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Today's Change</span>
+                    <span style="color: var(--accent-emerald);">+$1,234.56</span>
+                </div>
+            </div>
+            <a href="/vault-manager" class="action-btn" style="margin-top: auto;">
+                <i class="fas fa-chart-pie"></i> View Portfolios
+            </a>
+        </div>
+    </div>
 
-        <!-- AI Insights -->
-        <div class="golden-card">
+    <!-- Market Pulse Card -->
+    <div class="glass-card">
+        <div class="card-header">
             <h3 class="card-title">
-                <i class="fas fa-brain" style="color: var(--primary-gold);"></i>
-                AI Insights
+                <i class="fas fa-heartbeat" style="color: var(--primary-gold);"></i>
+                Market Pulse
             </h3>
-            <div style="background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
-                <p style="color: var(--text-muted); font-size: 0.9rem;">
-                    "Based on current market conditions, consider diversifying into emerging tech sectors. Opportunity score: 87%"
-                </p>
+            <i class="fas fa-bolt" style="color: var(--accent-blue);"></i>
+        </div>
+        <div class="card-content">
+            <p style="color: var(--text-muted);">
+                Live market data, news, and trends that matter to your investments.
+            </p>
+            <div style="background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Market Sentiment</span>
+                    <span style="color: var(--accent-emerald);">Bullish</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Active Stocks</span>
+                    <span style="color: var(--primary-gold);">1,234</span>
+                </div>
             </div>
-            <div style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted);">
-                <i class="fas fa-robot"></i>
-                <span>Golden Hand AI</span>
-            </div>
+            <a href="/market-pulse" class="action-btn" style="margin-top: auto;">
+                <i class="fas fa-chart-bar"></i> View Markets
+            </a>
         </div>
     </div>
 </div>
 
-<!-- Floating Action Button -->
-<div style="position: fixed; bottom: 30px; right: 30px;">
-    <button style="background: var(--primary-gold); color: var(--dark-bg); border: none; width: 60px; height: 60px; border-radius: 50%; font-size: 1.5rem; cursor: pointer; box-shadow: 0 10px 30px rgba(255,215,0,0.5);">
-        <i class="fas fa-hand-holding-usd"></i>
-    </button>
+<!-- Second Row of Features -->
+<div class="cards-grid">
+    <!-- Trade Nexus Card -->
+    <div class="glass-card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-exchange-alt" style="color: var(--primary-gold);"></i>
+                Trade Nexus
+            </h3>
+            <i class="fas fa-bolt" style="color: var(--accent-emerald);"></i>
+        </div>
+        <div class="card-content">
+            <p style="color: var(--text-muted);">
+                Seamless trading execution with advanced order types and real-time execution.
+            </p>
+            <div style="background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Execution Speed</span>
+                    <span style="color: var(--primary-gold);">47ms</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Success Rate</span>
+                    <span style="color: var(--accent-emerald);">99.8%</span>
+                </div>
+            </div>
+            <a href="/trade-nexus" class="action-btn" style="margin-top: auto;">
+                <i class="fas fa-trade"></i> Start Trading
+            </a>
+        </div>
+    </div>
+
+    <!-- Insight Engine Card -->
+    <div class="glass-card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-brain" style="color: var(--primary-gold);"></i>
+                Insight Engine
+            </h3>
+            <i class="fas fa-chart-bar" style="color: var(--accent-blue);"></i>
+        </div>
+        <div class="card-content">
+            <p style="color: var(--text-muted);">
+                Advanced analytics and predictive insights powered by machine learning.
+            </p>
+            <div style="background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>AI Models</span>
+                    <span style="color: var(--primary-gold);">12 Active</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Prediction Accuracy</span>
+                    <span style="color: var(--accent-emerald);">94.2%</span>
+                </div>
+            </div>
+            <a href="/insight-engine" class="action-btn" style="margin-top: auto;">
+                <i class="fas fa-analytics"></i> View Analytics
+            </a>
+        </div>
+    </div>
+
+    <!-- System Status Card -->
+    <div class="glass-card">
+        <div class="card-header">
+            <h3 class="card-title">
+                <i class="fas fa-shield-alt" style="color: var(--primary-gold);"></i>
+                System Status
+            </h3>
+            <i class="fas fa-check-circle" style="color: var(--accent-emerald);"></i>
+        </div>
+        <div class="card-content">
+            <p style="color: var(--text-muted);">
+                Real-time system health and performance monitoring across all pillars.
+            </p>
+            <div style="background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>All Systems</span>
+                    <span style="color: var(--accent-emerald);">Operational</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Response Time</span>
+                    <span style="color: var(--primary-gold);">128ms</span>
+                </div>
+            </div>
+            <a href="/api/status" class="secondary-btn" style="margin-top: auto;">
+                <i class="fas fa-info-circle"></i> View Details
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Stats Section -->
+<div style="background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.2); border-radius: 20px; padding: 2rem; margin-top: 2rem;">
+    <h3 style="text-align: center; margin-bottom: 1.5rem; color: var(--primary-gold);">Platform Overview</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; text-align: center;">
+        <div>
+            <div style="font-size: 2rem; color: var(--primary-gold); font-weight: bold;">5</div>
+            <div style="color: var(--text-muted);">Integrated Pillars</div>
+        </div>
+        <div>
+            <div style="font-size: 2rem; color: var(--accent-emerald); font-weight: bold;">24/7</div>
+            <div style="color: var(--text-muted);">Market Monitoring</div>
+        </div>
+        <div>
+            <div style="font-size: 2rem; color: var(--accent-blue); font-weight: bold;">AI</div>
+            <div style="color: var(--text-muted);">Powered Insights</div>
+        </div>
+        <div>
+            <div style="font-size: 2rem; color: var(--primary-gold); font-weight: bold;">$2.4M</div>
+            <div style="color: var(--text-muted);">Portfolios Managed</div>
+        </div>
+    </div>
 </div>
 {% endblock %}
