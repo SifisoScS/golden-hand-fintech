@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Breadcrumb Navigation -->
+<div style="margin-bottom: 2rem;">
+    <a href="/" style="color: var(--text-muted); text-decoration: none;">Dashboard</a>
+    <span style="color: var(--primary-gold); margin: 0 0.5rem;">›</span>
+    <a href="/vault-manager" style="color: var(--text-muted); text-decoration: none;">Vault Manager</a>
+    <span style="color: var(--primary-gold); margin: 0 0.5rem;">›</span>
+    <span style="color: var(--primary-gold);">{{ portfolio.name }}</span>
+</div>
+
+<div class="main-container">
+    <div class="dashboard-header">
+        <h1 class="golden-gradient">{{ portfolio.name }}</h1>
+        <p style="color: var(--text-muted);">Portfolio Details</p>
+    </div>
+
+    <div class="golden-card">
+        <h2 class="card-title">
+            <i class="fas fa-chart-pie" style="color: var(--primary-gold);"></i>
+            Holdings
+        </h2>
+        
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 1px solid rgba(255,215,0,0.3);">
+                        <th style="text-align: left; padding: 1rem;">Symbol</th>
+                        <th style="text-align: right; padding: 1rem;">Quantity</th>
+                        <th style="text-align: right; padding: 1rem;">Avg Price</th>
+                        <th style="text-align: right; padding: 1rem;">Current Price</th>
+                        <th style="text-align: right; padding: 1rem;">Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for holding in holdings %}
+                    <tr style="border-bottom: 1px solid rgba(255,215,0,0.1);">
+                        <td style="padding: 1rem; font-weight: bold;">{{ holding.symbol }}</td>
+                        <td style="padding: 1rem; text-align: right;">{{ holding.quantity }}</td>
+                        <td style="padding: 1rem; text-align: right;">${{ "{:.2f}".format(holding.average_price) }}</td>
+                        <td style="padding: 1rem; text-align: right;">${{ "{:.2f}".format(holding.current_price) }}</td>
+                        <td style="padding: 1rem; text-align: right;">${{ "{:,.2f}".format(holding.quantity * holding.current_price) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

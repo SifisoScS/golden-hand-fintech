@@ -95,6 +95,11 @@
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
         }
+
+        .pillar-btn.active {
+            background: rgba(255, 215, 0, 0.3);
+            border-color: var(--primary-gold);
+        }
         
         /* Main Layout */
         .main-container {
@@ -152,8 +157,49 @@
         .floating {
             animation: float 3s ease-in-out infinite;
         }
-        
-        /* Responsive */
+
+        /* Breadcrumb Styles */
+        .breadcrumb {
+            margin-bottom: 2rem;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-gold);
+        }
+
+        .breadcrumb span {
+            margin: 0 0.5rem;
+            color: var(--primary-gold);
+        }
+
+        /* Quick Action Header */
+        .action-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        /* Mobile Navigation */
+        .mobile-nav-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary-gold);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        /* Responsive Navigation */
         @media (max-width: 1024px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -161,6 +207,39 @@
             
             .nav-pillars {
                 display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: var(--dark-bg);
+                border-bottom: 1px solid rgba(255,215,0,0.2);
+                padding: 1rem;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .nav-pillars.show {
+                display: flex;
+            }
+            
+            .mobile-nav-toggle {
+                display: block;
+            }
+            
+            .action-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .golden-nav {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+                margin-top: 70px;
             }
         }
     </style>
@@ -170,11 +249,21 @@
     <nav class="golden-nav">
         <div class="nav-container">
             <div class="logo">
-                <i class="fas fa-hand-holding-usd golden-gradient"></i>
-                <span class="golden-gradient">GOLDEN HAND</span>
+                <a href="/" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-hand-holding-usd golden-gradient"></i>
+                    <span class="golden-gradient">GOLDEN HAND</span>
+                </a>
             </div>
-            
-            <div class="nav-pillars">
+
+            <!-- Mobile Navigation Toggle -->
+            <button class="mobile-nav-toggle" onclick="toggleNav()">
+                <i class="fas fa-bars"></i>
+            </button>
+        
+            <div class="nav-pillars" id="navPillars">
+                <a href="/" class="pillar-btn">
+                    <i class="fas fa-home"></i> Dashboard
+                </a>
                 <a href="/wealth-guide" class="pillar-btn">
                     <i class="fas fa-gem"></i> Wealth Guide
                 </a>
@@ -220,6 +309,48 @@
                 document.querySelector(this.getAttribute('href')).scrollIntoView({
                     behavior: 'smooth'
                 });
+            });
+        });
+
+        // Mobile navigation toggle
+        function toggleNav() {
+            const navPillars = document.getElementById('navPillars');
+            navPillars.classList.toggle('show');
+        }
+
+        // Close mobile nav when clicking outside
+        document.addEventListener('click', function(event) {
+            const navPillars = document.getElementById('navPillars');
+            const mobileToggle = document.querySelector('.mobile-nav-toggle');
+            const navContainer = document.querySelector('.nav-container');
+            
+            if (!navContainer.contains(event.target)) {
+                navPillars.classList.remove('show');
+            }
+        });
+
+        // Update active navigation state
+        function setActiveNav() {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.pillar-btn');
+            
+            navLinks.forEach(link => {
+                const linkPath = link.getAttribute('href');
+                if (currentPath === linkPath || 
+                    (currentPath.startsWith(linkPath) && linkPath !== '/')) {
+                    link.classList.add('active');
+                }
+            });
+        }
+
+        // Call when page loads
+        document.addEventListener('DOMContentLoaded', setActiveNav);
+
+        // Close mobile nav when a link is clicked
+        document.querySelectorAll('.nav-pillars a').forEach(link => {
+            link.addEventListener('click', () => {
+                const navPillars = document.getElementById('navPillars');
+                navPillars.classList.remove('show');
             });
         });
     </script>

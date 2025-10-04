@@ -1,17 +1,15 @@
-from flask import Blueprint, render_template, jsonify, request
-from flask_login import login_required, current_user
+from flask import Blueprint, render_template, jsonify
 
 bp = Blueprint('wealth_guide', __name__)
 
 @bp.route('/')
-@login_required
 def dashboard():
-    return render_template('wealth_guide_dashboard.html')  # ← Changed template name
+    return render_template('wealth_guide_dashboard.html')
 
 @bp.route('/recommendations')
-@login_required
 def get_recommendations():
-    risk_profile = current_user.risk_tolerance
+    # Use default risk profile since we don't have authentication yet
+    risk_profile = 'moderate'  # Instead of current_user.risk_tolerance
     recommendations = generate_recommendations(risk_profile)
     return jsonify(recommendations)
 
