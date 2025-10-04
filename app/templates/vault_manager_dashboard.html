@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Breadcrumb Navigation -->
+<div style="margin-bottom: 2rem;">
+    <a href="/" style="color: var(--text-muted); text-decoration: none;">Dashboard</a>
+    <span style="color: var(--primary-gold); margin: 0 0.5rem;">›</span>
+    <span style="color: var(--primary-gold);">Vault Manager</span>
+</div>
+
+<div class="main-container">
+    <div class="dashboard-header" style="text-align: center; margin-bottom: 3rem;">
+        <h1 class="golden-gradient" style="font-size: 3rem;">Vault Manager</h1>
+        <p style="font-size: 1.25rem; color: var(--text-muted);">Intelligent Portfolio Management</p>
+    </div>
+
+    <!-- Portfolio Overview -->
+    <div class="golden-card">
+        <h2 class="card-title">
+            <i class="fas fa-vault" style="color: var(--primary-gold);"></i>
+            Your Portfolios
+        </h2>
+        
+        <div style="display: grid; gap: 1rem;">
+            {% for portfolio in portfolios %}
+            <div style="background: rgba(255,215,0,0.1); padding: 1.5rem; border-radius: 15px;">
+                <div style="display: flex; justify-content: between; align-items: center;">
+                    <div>
+                        <strong style="font-size: 1.2rem;">{{ portfolio.name }}</strong>
+                        <div style="color: var(--text-muted);">Total Value: ${{ "{:,.2f}".format(portfolio.value) }}</div>
+                    </div>
+                    <a href="/vault-manager/portfolio/{{ portfolio.id }}" 
+                       style="background: var(--primary-gold); color: var(--dark-bg); padding: 0.5rem 1rem; border-radius: 10px; text-decoration: none; font-weight: bold;">
+                        View Details
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

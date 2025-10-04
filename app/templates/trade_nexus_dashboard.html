@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Breadcrumb Navigation -->
+<div style="margin-bottom: 2rem;">
+    <a href="/" style="color: var(--text-muted); text-decoration: none;">Dashboard</a>
+    <span style="color: var(--primary-gold); margin: 0 0.5rem;">›</span>
+    <span style="color: var(--primary-gold);">Trade Nexus</span>
+</div>
+
+<div class="main-container">
+    <div class="dashboard-header" style="text-align: center; margin-bottom: 3rem;">
+        <h1 class="golden-gradient" style="font-size: 3rem;">Trade Nexus</h1>
+        <p style="font-size: 1.25rem; color: var(--text-muted);">Seamless Trading Execution</p>
+    </div>
+
+    <!-- Trading Interface -->
+    <div class="golden-card">
+        <h2 class="card-title">
+            <i class="fas fa-exchange-alt" style="color: var(--primary-gold);"></i>
+            Execute Trade
+        </h2>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <!-- Trade Form -->
+            <div>
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Symbol</label>
+                    <input type="text" id="symbol" placeholder="e.g., AAPL" 
+                           style="width: 100%; padding: 1rem; border: 1px solid rgba(255,215,0,0.3); background: rgba(255,215,0,0.1); color: white; border-radius: 10px;">
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Action</label>
+                    <select id="action" style="width: 100%; padding: 1rem; border: 1px solid rgba(255,215,0,0.3); background: rgba(255,215,0,0.1); color: white; border-radius: 10px;">
+                        <option value="buy">Buy</option>
+                        <option value="sell">Sell</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label style="display: block; margin-bottom: 0.5rem; color: var(--text-muted);">Quantity</label>
+                    <input type="number" id="quantity" placeholder="e.g., 10" 
+                           style="width: 100%; padding: 1rem; border: 1px solid rgba(255,215,0,0.3); background: rgba(255,215,0,0.1); color: white; border-radius: 10px;">
+                </div>
+                
+                <button onclick="executeTrade()" 
+                        style="width: 100%; background: var(--primary-gold); color: var(--dark-bg); border: none; padding: 1rem; border-radius: 10px; font-weight: bold; cursor: pointer;">
+                    Execute Trade (Demo)
+                </button>
+            </div>
+            
+            <!-- Trade Info -->
+            <div>
+                <div style="background: rgba(255,215,0,0.1); padding: 1.5rem; border-radius: 15px;">
+                    <h3 style="margin-bottom: 1rem;">Trade Information</h3>
+                    <p style="color: var(--text-muted);">
+                        This is a demo trading interface. In production, this would connect to real brokerage APIs for live trading execution.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function executeTrade() {
+    const symbol = document.getElementById('symbol').value || 'AAPL';
+    const action = document.getElementById('action').value;
+    const quantity = document.getElementById('quantity').value || 10;
+    
+    fetch('/trade-nexus/execute', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            symbol: symbol,
+            type: action,
+            quantity: parseInt(quantity),
+            price: 185.43, // Mock price
+            portfolio_id: 1
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`Trade executed successfully!\n${symbol} ${action.toUpperCase()} ${quantity} shares`);
+        } else {
+            alert('Trade failed: ' + data.error);
+        }
+    });
+}
+</script>
+{% endblock %}

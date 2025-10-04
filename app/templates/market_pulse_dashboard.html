@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Breadcrumb Navigation -->
+<div style="margin-bottom: 2rem;">
+    <a href="/" style="color: var(--text-muted); text-decoration: none;">Dashboard</a>
+    <span style="color: var(--primary-gold); margin: 0 0.5rem;">›</span>
+    <span style="color: var(--primary-gold);">Market Pulse</span>
+</div>
+
+<div class="main-container">
+    <!-- Quick Action Header -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem;">
+        <div>
+            <h1 class="golden-gradient" style="font-size: 3rem; margin: 0;">Market Pulse</h1>
+            <p style="font-size: 1.25rem; color: var(--text-muted); margin: 0;">Live Market Intelligence</p>
+        </div>
+        <a href="/" class="pillar-btn" style="text-decoration: none;">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Real-time Market Data -->
+    <div class="golden-card">
+        <div class="card-header">
+            <h2 class="card-title">
+                <i class="fas fa-heartbeat" style="color: var(--primary-gold);"></i>
+                Live Market Watch
+            </h2>
+            <span style="background: var(--success-green); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+                Live
+            </span>
+        </div>
+        
+        <div id="market-watch" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+            <!-- Market data will be loaded here -->
+            <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                <i class="fas fa-sync-alt fa-spin" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                <p>Loading live market data...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Market Overview -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+        <div class="golden-card">
+            <h3 class="card-title">
+                <i class="fas fa-chart-line"></i>
+                Market Sentiment
+            </h3>
+            <div style="text-align: center; padding: 1rem;">
+                <div style="font-size: 2rem; color: var(--success-green); margin-bottom: 0.5rem;">
+                    Bullish
+                </div>
+                <div style="background: rgba(16,185,129,0.1); padding: 0.5rem; border-radius: 10px;">
+                    78% Positive
+                </div>
+            </div>
+        </div>
+
+        <div class="golden-card">
+            <h3 class="card-title">
+                <i class="fas fa-fire"></i>
+                Trending Stocks
+            </h3>
+            <div style="padding: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>AAPL</span>
+                    <span style="color: var(--success-green);">+1.67%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>TSLA</span>
+                    <span style="color: var(--success-green);">+3.45%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>NVDA</span>
+                    <span style="color: var(--success-green);">+2.89%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="golden-card">
+            <h3 class="card-title">
+                <i class="fas fa-bell"></i>
+                Market Alerts
+            </h3>
+            <div style="padding: 1rem;">
+                <div style="background: rgba(239,68,68,0.1); padding: 1rem; border-radius: 10px; margin-bottom: 1rem;">
+                    <div style="color: var(--danger-red); font-weight: bold;">High Volatility</div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem;">Tech sector showing increased volatility</div>
+                </div>
+                <div style="background: rgba(255,215,0,0.1); padding: 1rem; border-radius: 10px;">
+                    <div style="color: var(--primary-gold); font-weight: bold;">Opportunity</div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem;">Energy stocks trending upward</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- News Section -->
+    <div class="golden-card" style="margin-top: 2rem;">
+        <h2 class="card-title">
+            <i class="fas fa-newspaper" style="color: var(--primary-gold);"></i>
+            Market News
+        </h2>
+        <div style="display: grid; gap: 1rem;">
+            <div style="display: flex; gap: 1rem; padding: 1rem; border-bottom: 1px solid rgba(255,215,0,0.1);">
+                <div style="background: var(--accent-blue); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div>
+                    <div style="font-weight: bold;">Tech Stocks Rally on Strong Earnings</div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem;">Major tech companies exceed Q4 expectations</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1rem; padding: 1rem; border-bottom: 1px solid rgba(255,215,0,0.1);">
+                <div style="background: var(--success-green); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem;">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div>
+                    <div style="font-weight: bold;">Fed Holds Interest Rates Steady</div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem;">Central bank maintains current monetary policy</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load market data
+function loadMarketData() {
+    fetch('/market-pulse/quotes/AAPL,MSFT,GOOGL,VTI,QQQ,TSLA,NVDA')
+        .then(response => response.json())
+        .then(quotes => {
+            const container = document.getElementById('market-watch');
+            if (Object.keys(quotes).length > 0) {
+                container.innerHTML = Object.entries(quotes).map(([symbol, data]) => `
+                    <div style="background: rgba(255,215,0,0.1); padding: 1.5rem; border-radius: 15px; text-align: center; transition: all 0.3s ease; cursor: pointer;" 
+                         onmouseover="this.style.transform='translateY(-5px)'; this.style.background='rgba(255,215,0,0.2)'" 
+                         onmouseout="this.style.transform='translateY(0)'; this.style.background='rgba(255,215,0,0.1)'">
+                        <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">${symbol}</div>
+                        <div style="font-size: 1.25rem; margin-bottom: 0.5rem;">$${data.price}</div>
+                        <div style="color: ${data.change >= 0 ? 'var(--success-green)' : 'var(--danger-red)'}; font-weight: bold;">
+                            ${data.change >= 0 ? '+' : ''}${data.change} (${data.changePercent}%)
+                        </div>
+                    </div>
+                `).join('');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading market data:', error);
+            const container = document.getElementById('market-watch');
+            container.innerHTML = `
+                <div style="text-align: center; padding: 2rem; color: var(--danger-red); grid-column: 1 / -1;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                    <p>Unable to load market data. Please try again later.</p>
+                </div>
+            `;
+        });
+}
+
+// Load data immediately and set interval for updates
+loadMarketData();
+setInterval(loadMarketData, 30000); // Update every 30 seconds
+
+// Add click handler for stock symbols
+document.addEventListener('click', function(event) {
+    if (event.target.closest('[style*="cursor: pointer"]')) {
+        const symbol = event.target.closest('[style*="cursor: pointer"]').querySelector('div').textContent;
+        alert(`Viewing details for ${symbol} - This would show detailed analysis in production.`);
+    }
+});
+</script>
+{% endblock %}

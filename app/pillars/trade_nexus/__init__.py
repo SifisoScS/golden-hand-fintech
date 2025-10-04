@@ -1,36 +1,40 @@
 from flask import Blueprint, render_template, jsonify, request
-from flask_login import login_required, current_user
+# from flask_login import login_required, current_user  # COMMENT OUT
 from app.models import Transaction, Portfolio, db
 from datetime import datetime
 
 bp = Blueprint('trade_nexus', __name__)
 
 @bp.route('/')
-@login_required
+# @login_required  # COMMENT OUT
 def trading_desk():
-    portfolios = current_user.portfolios.all()
-    return render_template('trade_nexus/desk.html', portfolios=portfolios)
+    # TEMPORARY: Demo portfolios instead of user portfolios
+    # portfolios = current_user.portfolios.all()
+    demo_portfolios = [
+        {'id': 1, 'name': 'Growth Portfolio'},
+        {'id': 2, 'name': 'Retirement Fund'},
+        {'id': 3, 'name': 'Emergency Fund'}
+    ]
+    return render_template('trade_nexus_dashboard.html', portfolios=demo_portfolios)
 
 @bp.route('/execute', methods=['POST'])
-@login_required
+# @login_required  # COMMENT OUT
 def execute_trade():
     data = request.json
-    portfolio = Portfolio.query.get(data['portfolio_id'])
     
-    if portfolio.owner != current_user:
-        return jsonify({'success': False, 'error': 'Unauthorized'})
+    # TEMPORARY: Skip authentication and database saving
+    # portfolio = Portfolio.query.get(data['portfolio_id'])
+    # if portfolio.owner != current_user:
+    #     return jsonify({'success': False, 'error': 'Unauthorized'})
     
-    # Create transaction
-    transaction = Transaction(
-        user_id=current_user.id,
-        portfolio_id=portfolio.id,
-        symbol=data['symbol'],
-        transaction_type=data['type'],
-        quantity=data['quantity'],
-        price=data['price']
-    )
+    # Create demo transaction response
+    demo_transaction = {
+        'id': 999,
+        'symbol': data.get('symbol', 'AAPL'),
+        'type': data.get('type', 'buy'),
+        'quantity': data.get('quantity', 10),
+        'price': data.get('price', 185.43),
+        'timestamp': datetime.utcnow().isoformat()
+    }
     
-    db.session.add(transaction)
-    db.session.commit()
-    
-    return jsonify({'success': True, 'transaction_id': transaction.id})
+    return jsonify({'success': True, 'transaction': demo_transaction, 'message': 'Demo mode - trade simulated'})
