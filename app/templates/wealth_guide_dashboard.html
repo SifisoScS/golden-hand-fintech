@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="main-container">
+    <div class="dashboard-header" style="text-align: center; margin-bottom: 3rem;">
+        <h1 class="golden-gradient" style="font-size: 3rem;">Wealth Guide</h1>
+        <p style="font-size: 1.25rem; color: var(--text-muted);">AI-Powered Financial Intelligence</p>
+    </div>
+
+    <div class="golden-card">
+        <div class="card-header">
+            <h2 class="card-title">
+                <i class="fas fa-robot" style="color: var(--primary-gold);"></i>
+                Your Personalized Investment Strategy
+            </h2>
+            <span style="background: var(--accent-blue); color: white; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.9rem;">
+                AI Active
+            </span>
+        </div>
+        
+        <div id="recommendations-container" style="display: grid; gap: 1rem;">
+            <div style="text-align: center; padding: 2rem; color: var(--text-muted);">
+                <i class="fas fa-robot" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                <p>Loading your AI-powered recommendations...</p>
+            </div>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+        <div class="golden-card">
+            <h3 class="card-title">
+                <i class="fas fa-chart-line"></i>
+                Risk Profile
+            </h3>
+            <div style="text-align: center; padding: 1rem;">
+                <div style="font-size: 2rem; color: var(--primary-gold); margin-bottom: 0.5rem;">
+                    Moderate
+                </div>
+                <div style="background: rgba(255,215,0,0.1); padding: 0.5rem; border-radius: 10px;">
+                    Balanced growth & security
+                </div>
+            </div>
+        </div>
+
+        <div class="golden-card">
+            <h3 class="card-title">
+                <i class="fas fa-bullseye"></i>
+                Investment Goals
+            </h3>
+            <div style="padding: 1rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Retirement</span>
+                    <span style="color: var(--success-green);">65%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>Wealth Building</span>
+                    <span style="color: var(--primary-gold);">25%</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Education</span>
+                    <span style="color: var(--accent-blue);">10%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Load AI recommendations
+fetch('/wealth-guide/recommendations')
+    .then(response => response.json())
+    .then(recommendations => {
+        const container = document.getElementById('recommendations-container');
+        container.innerHTML = recommendations.map(rec => `
+            <div style="background: rgba(255,215,0,0.1); padding: 1.5rem; border-radius: 15px; border-left: 4px solid var(--primary-gold);">
+                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
+                    <div>
+                        <strong style="font-size: 1.2rem;">${rec.symbol}</strong>
+                        <div style="color: var(--text-muted); font-size: 0.9rem;">${rec.type}</div>
+                    </div>
+                    <div style="background: var(--primary-gold); color: var(--dark-bg); padding: 0.5rem 1rem; border-radius: 20px; font-weight: bold;">
+                        ${rec.allocation}%
+                    </div>
+                </div>
+                <div style="color: var(--text-muted);">
+                    AI-recommended allocation based on your risk profile and market conditions.
+                </div>
+            </div>
+        `).join('');
+    });
+</script>
+{% endblock %}
