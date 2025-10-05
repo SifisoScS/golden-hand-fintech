@@ -57,7 +57,11 @@ def create_app():
         ('vault_manager', '/vault-manager'),
         ('market_pulse', '/market-pulse'), 
         ('trade_nexus', '/trade-nexus'),
-        ('insight_engine', '/insight-engine')
+        ('insight_engine', '/insight-engine'),
+        ('budget_tracker', '/budget-tracker'),
+        ('crypto_wallet', '/crypto-wallet'),
+        ('esg_analyzer', '/esg-analyzer'),
+        ('community_forum', '/community-forum')
     ]
 
     for pillar_name, url_prefix in legacy_pillars:

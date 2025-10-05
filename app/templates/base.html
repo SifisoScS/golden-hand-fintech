@@ -8,6 +8,10 @@
     <!-- Modern CSS Framework -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chart.js for Data Viz -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Gauge Chart Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-gauge@0.3.0/dist/chartjs-gauge.min.js"></script>
     
     <style>
         :root {
@@ -16,28 +20,53 @@
             --accent-blue: #00d4ff;
             --accent-emerald: #10B981;
             --dark-bg: #0A0F1C;
+            --light-bg: #F8FAFC;
             --card-bg: rgba(26, 31, 46, 0.8);
             --glass-bg: rgba(255, 255, 255, 0.08);
             --text-light: #F8FAFC;
+            --text-dark: #0A0F1C;
             --text-muted: #94A3B8;
+            --mode-bg: var(--dark-bg);
+            --mode-text: var(--text-light);
+            --mode-card: var(--card-bg);
+        }
+        
+        body.light-mode {
+            --mode-bg: var(--light-bg);
+            --mode-text: var(--text-dark);
+            --mode-card: rgba(255, 255, 255, 0.9);
+            --glass-bg: rgba(10, 15, 28, 0.08);
         }
         
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            transition: all 0.3s ease; /* Micro-interactions */
         }
         
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, var(--dark-bg) 0%, #000000 50%, #1E293B 100%);
-            color: var(--text-light);
+            background: var(--mode-bg);
+            color: var(--mode-text);
             min-height: 100vh;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-container {
+            flex: 1;
+            margin-top: 80px;
+            padding: 2rem;
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
         }
         
         .golden-gradient {
-            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--accent-emerald) 50%, var(--accent-blue) 100%);
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--accent-emerald) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -45,7 +74,7 @@
         
         /* Glass Navigation */
         .glass-nav {
-            background: rgba(10, 15, 28, 0.95);
+            background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 215, 0, 0.2);
             padding: 1rem 2rem;
@@ -54,6 +83,9 @@
             top: 0;
             z-index: 1000;
             box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .nav-container {
@@ -62,6 +94,7 @@
             align-items: center;
             max-width: 1400px;
             margin: 0 auto;
+            width: 100%;
         }
         
         .logo {
@@ -72,77 +105,203 @@
             font-weight: 700;
         }
         
-        .nav-pillars {
-            display: flex;
-            gap: 0.5rem;
+        .logo-text {
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--accent-emerald) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            white-space: nowrap;
         }
         
-        .nav-link {
+        /* Mode Toggle */
+        .mode-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--mode-text);
+            font-size: 1.2rem;
+            margin-left: 1rem;
+        }
+        
+        /* Dropdown Menu */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-btn {
             background: rgba(255, 215, 0, 0.1);
             border: 1px solid rgba(255, 215, 0, 0.3);
-            color: var(--text-light);
+            color: var(--mode-text);
             padding: 0.75rem 1.5rem;
             border-radius: 50px;
-            text-decoration: none;
             font-weight: 500;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            position: relative;
-            overflow: hidden;
+            cursor: pointer;
         }
         
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
-        }
-        
-        .nav-link:hover::before {
-            left: 100%;
-        }
-        
-        .nav-link:hover {
+        .dropdown-btn:hover {
             background: rgba(255, 215, 0, 0.2);
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(255, 215, 0, 0.3);
         }
         
-        .nav-link.active {
-            background: rgba(255, 215, 0, 0.3);
-            border-color: var(--primary-gold);
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 15px;
+            min-width: 250px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            z-index: 1001;
+            margin-top: 0.5rem;
+            overflow: hidden;
         }
-
-        /* Main Layout */
-        .main-container {
-            margin-top: 80px;
+        
+        .dropdown-content.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .dropdown-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            color: var(--mode-text);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+        
+        .dropdown-link:last-child {
+            border-bottom: none;
+        }
+        
+        .dropdown-link:hover {
+            background: rgba(255, 215, 0, 0.1);
+            padding-left: 2rem;
+        }
+        
+        .dropdown-link i {
+            width: 20px;
+            text-align: center;
+            color: var(--primary-gold);
+        }
+        
+        /* Voice Search Placeholder */
+        .voice-search {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--mode-text);
+            font-size: 1.2rem;
+            margin-left: 1rem;
+        }
+        
+        /* Chatbot Bubble */
+        .chatbot-bubble {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-gold);
+            color: var(--dark-bg);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* Footer */
+        .golden-footer {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
             padding: 2rem;
+            margin-top: auto;
+            text-align: center;
+        }
+        
+        .footer-content {
             max-width: 1400px;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .footer-main {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--mode-text);
+        }
+        
+        .footer-powered {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        
+        .trust-badges {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .fintech-italic {
+            font-style: italic;
+            color: var(--primary-gold);
+        }
+        
+        .division-name {
+            color: var(--accent-emerald);
+            font-weight: 500;
+        }
+        
+        .company-name {
+            color: var(--accent-blue);
+            font-weight: 500;
         }
         
         /* Hero Section */
         .hero-section {
             text-align: center;
             padding: 4rem 2rem;
-            background: linear-gradient(135deg, rgba(255,215,0,0.1) 0%, rgba(37,99,235,0.1) 50%, rgba(16,185,129,0.1) 100%);
+            background: var(--glass-bg);
             border-radius: 20px;
             margin-bottom: 3rem;
             border: 1px solid rgba(255,215,0,0.2);
+            animation: fadeIn 1s ease-in-out;
         }
         
         .hero-title {
             font-size: 3.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--accent-emerald) 50%, var(--accent-blue) 100%);
+            background: linear-gradient(135deg, var(--primary-gold) 0%, var(--accent-emerald) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -157,17 +316,23 @@
             margin-right: auto;
         }
         
+        .user-greeting {
+            font-size: 1.5rem;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+        }
+        
         /* Horizontal Cards Grid */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 1.5rem;
+            gap: 1.5rem; /* Fibonacci 21px approx */
             margin-bottom: 2rem;
         }
         
         /* Glass Cards */
         .glass-card {
-            background: var(--card-bg);
+            background: var(--mode-card);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 215, 0, 0.2);
             border-radius: 20px;
@@ -176,7 +341,23 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            opacity: 0;
+            animation: cardFadeIn 0.5s ease forwards;
         }
+        
+        @keyframes cardFadeIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .glass-card:nth-child(1) { animation-delay: 0.1s; }
+        .glass-card:nth-child(2) { animation-delay: 0.2s; }
+        .glass-card:nth-child(3) { animation-delay: 0.3s; }
+        .glass-card:nth-child(4) { animation-delay: 0.4s; }
+        .glass-card:nth-child(5) { animation-delay: 0.5s; }
+        .glass-card:nth-child(6) { animation-delay: 0.6s; }
+        .glass-card:nth-child(7) { animation-delay: 0.7s; }
+        .glass-card:nth-child(8) { animation-delay: 0.8s; }
+        .glass-card:nth-child(9) { animation-delay: 0.9s; }
         
         .glass-card:hover {
             transform: translateY(-5px);
@@ -204,6 +385,45 @@
             display: flex;
             flex-direction: column;
             gap: 1rem;
+        }
+        
+        /* Chart Placeholder */
+        .chart-container {
+            height: 150px;
+            position: relative;
+        }
+        
+        /* Gamification Progress */
+        .progress-bar {
+            background: rgba(255,215,0,0.1);
+            border-radius: 10px;
+            height: 8px;
+            margin-top: 0.5rem;
+        }
+        
+        .progress-fill {
+            background: var(--primary-gold);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        
+        .badge {
+            background: var(--accent-emerald);
+            color: var(--dark-bg);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+        
+        .reward-badge {
+            background: var(--accent-blue);
+            color: var(--dark-bg);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
         }
         
         /* Action Buttons */
@@ -265,24 +485,41 @@
             cursor: pointer;
             padding: 0.5rem;
         }
-
+        
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            padding: 1rem;
+            z-index: 999;
+        }
+        
+        .mobile-menu.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-100%); }
+            to { transform: translateY(0); }
+        }
+        
+        .mobile-link {
+            display: block;
+            padding: 1rem;
+            color: var(--mode-text);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+        
         /* Responsive */
         @media (max-width: 1024px) {
-            .nav-pillars {
+            .dropdown {
                 display: none;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: var(--dark-bg);
-                border-bottom: 1px solid rgba(255,215,0,0.2);
-                padding: 1rem;
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .nav-pillars.show {
-                display: flex;
             }
             
             .mobile-nav-toggle {
@@ -295,6 +532,10 @@
             
             .cards-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                text-align: center;
             }
         }
 
@@ -315,6 +556,18 @@
             .hero-title {
                 font-size: 2rem;
             }
+            
+            .golden-footer {
+                padding: 1.5rem;
+            }
+            
+            .footer-main {
+                font-size: 1rem;
+            }
+            
+            .footer-powered {
+                font-size: 0.8rem;
+            }
         }
     </style>
 </head>
@@ -325,41 +578,116 @@
             <div class="logo">
                 <a href="/" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
                     <i class="fas fa-hand-holding-usd golden-gradient"></i>
-                    <span class="golden-gradient">GOLDEN HAND</span>
+                    <span class="logo-text">Golden Hand</span>
                 </a>
             </div>
 
+            <!-- Desktop Dropdown Menu -->
+            <div class="dropdown">
+                <button class="dropdown-btn" onclick="toggleDropdown()">
+                    <i class="fas fa-bars"></i>
+                    Menu
+                    <i class="fas fa-chevron-down" style="font-size: 0.8rem;"></i>
+                </button>
+                <div class="dropdown-content" id="dropdownContent">
+                    <a href="/" class="dropdown-link" aria-label="Dashboard">
+                        <i class="fas fa-home"></i>
+                        Dashboard
+                    </a>
+                    <a href="/wealth-guide" class="dropdown-link" aria-label="Wealth Guide">
+                        <i class="fas fa-gem"></i>
+                        Wealth Guide
+                    </a>
+                    <a href="/vault-manager" class="dropdown-link" aria-label="Vault Manager">
+                        <i class="fas fa-vault"></i>
+                        Vault Manager
+                    </a>
+                    <a href="/market-pulse" class="dropdown-link" aria-label="Market Pulse">
+                        <i class="fas fa-heartbeat"></i>
+                        Market Pulse
+                    </a>
+                    <a href="/trade-nexus" class="dropdown-link" aria-label="Trade Nexus">
+                        <i class="fas fa-exchange-alt"></i>
+                        Trade Nexus
+                    </a>
+                    <a href="/insight-engine" class="dropdown-link" aria-label="Insight Engine">
+                        <i class="fas fa-brain"></i>
+                        Insight Engine
+                    </a>
+                    <a href="/budget-tracker" class="dropdown-link" aria-label="Budget Tracker">
+                        <i class="fas fa-calculator"></i>
+                        Budget Tracker
+                    </a>
+                    <a href="/crypto-wallet" class="dropdown-link" aria-label="Crypto Wallet">
+                        <i class="fab fa-bitcoin"></i>
+                        Crypto Wallet
+                    </a>
+                    <a href="/esg-analyzer" class="dropdown-link" aria-label="ESG Analyzer">
+                        <i class="fas fa-leaf"></i>
+                        ESG Analyzer
+                    </a>
+                    <a href="/community-forum" class="dropdown-link" aria-label="Community Forum">
+                        <i class="fas fa-users"></i>
+                        Community Forum
+                    </a>
+                </div>
+            </div>
+
+            <!-- Voice Search -->
+            <button class="voice-search" onclick="startVoiceRecognition()" aria-label="Voice Search">
+                <i class="fas fa-microphone"></i>
+            </button>
+
+            <!-- Mode Toggle -->
+            <button class="mode-toggle" onclick="toggleMode()" aria-label="Toggle Dark/Light Mode">
+                <i class="fas fa-sun"></i>
+            </button>
+
             <!-- Mobile Navigation Toggle -->
-            <button class="mobile-nav-toggle" onclick="toggleNav()">
+            <button class="mobile-nav-toggle" onclick="toggleMobileNav()">
                 <i class="fas fa-bars"></i>
             </button>
-        
-            <div class="nav-pillars" id="navPillars">
-                <a href="/" class="nav-link">
-                    <i class="fas fa-home"></i> Dashboard
-                </a>
-                <a href="/wealth-guide" class="nav-link">
-                    <i class="fas fa-gem"></i> Wealth Guide
-                </a>
-                <a href="/vault-manager" class="nav-link">
-                    <i class="fas fa-vault"></i> Vault Manager
-                </a>
-                <a href="/market-pulse" class="nav-link">
-                    <i class="fas fa-heartbeat"></i> Market Pulse
-                </a>
-                <a href="/trade-nexus" class="nav-link">
-                    <i class="fas fa-exchange-alt"></i> Trade Nexus
-                </a>
-                <a href="/insight-engine" class="nav-link">
-                    <i class="fas fa-brain"></i> Insight Engine
-                </a>
-            </div>
         </div>
     </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="/" class="mobile-link">Dashboard</a>
+        <a href="/wealth-guide" class="mobile-link">Wealth Guide</a>
+        <a href="/vault-manager" class="mobile-link">Vault Manager</a>
+        <a href="/market-pulse" class="mobile-link">Market Pulse</a>
+        <a href="/trade-nexus" class="mobile-link">Trade Nexus</a>
+        <a href="/insight-engine" class="mobile-link">Insight Engine</a>
+        <a href="/budget-tracker" class="mobile-link">Budget Tracker</a>
+        <a href="/crypto-wallet" class="mobile-link">Crypto Wallet</a>
+        <a href="/esg-analyzer" class="mobile-link">ESG Analyzer</a>
+        <a href="/community-forum" class="mobile-link">Community Forum</a>
+    </div>
 
     <!-- Main Content -->
     <div class="main-container">
         {% block content %}{% endblock %}
+    </div>
+
+    <!-- Universal Footer -->
+    <footer class="golden-footer">
+        <div class="footer-content">
+            <div class="footer-main">
+                Golden Hand <span class="fintech-italic">FinTech</span>
+            </div>
+            <div class="footer-powered">
+                Powered by: <span class="division-name">iKhaya AI</span> a division of <span class="company-name">ARISAN SIFISO</span>
+            </div>
+            <div class="trust-badges">
+                <i class="fas fa-lock" title="Secure" aria-label="Secure"></i>
+                <i class="fas fa-shield-alt" title="Protected" aria-label="Protected"></i>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot Bubble -->
+    <div class="chatbot-bubble" onclick="openChatbot()" aria-label="Open Chatbot">
+        <i class="fas fa-robot"></i>
     </div>
 
     <!-- Golden Hand Signature Animation -->
@@ -368,47 +696,559 @@
     </div>
 
     <script>
-        // Mobile navigation toggle
-        function toggleNav() {
-            const navPillars = document.getElementById('navPillars');
-            navPillars.classList.toggle('show');
+        // =============================================
+        // AGENTIC ARCHITECTURE CORE SYSTEM
+        // =============================================
+
+        // Agent Communication System
+        class AgentCommunication {
+            constructor() {
+                this.agents = new Map();
+                this.messageQueue = [];
+                this.isProcessing = false;
+            }
+            
+            registerAgent(agentName, endpoint, capabilities = []) {
+                this.agents.set(agentName, {
+                    endpoint,
+                    capabilities,
+                    status: 'active',
+                    lastActive: Date.now()
+                });
+                console.log(`🤖 Agent registered: ${agentName}`, capabilities);
+            }
+            
+            async communicate(agentName, data, options = {}) {
+                const agent = this.agents.get(agentName);
+                if (!agent) {
+                    console.error(`Agent ${agentName} not registered`);
+                    return { success: false, error: 'Agent not found' };
+                }
+                
+                const message = {
+                    id: this.generateMessageId(),
+                    agent: agentName,
+                    data,
+                    timestamp: Date.now(),
+                    priority: options.priority || 'normal'
+                };
+                
+                // Add to queue and process
+                this.messageQueue.push(message);
+                return await this.processQueue();
+            }
+            
+            async processQueue() {
+                if (this.isProcessing || this.messageQueue.length === 0) return;
+                
+                this.isProcessing = true;
+                const message = this.messageQueue.shift();
+                
+                try {
+                    console.log(`📡 Agent Communication: ${message.agent}`, message.data);
+                    
+                    // Simulate API call - in production would be real fetch
+                    const response = await this.simulateAgentResponse(message);
+                    
+                    // Update agent status
+                    const agent = this.agents.get(message.agent);
+                    if (agent) {
+                        agent.lastActive = Date.now();
+                    }
+                    
+                    this.isProcessing = false;
+                    
+                    // Process next message if any
+                    if (this.messageQueue.length > 0) {
+                        setTimeout(() => this.processQueue(), 100);
+                    }
+                    
+                    return response;
+                } catch (error) {
+                    console.error(`Agent communication failed: ${error}`);
+                    this.isProcessing = false;
+                    return { success: false, error: error.message };
+                }
+            }
+            
+            async simulateAgentResponse(message) {
+                // Simulate different agent responses based on agent type
+                await new Promise(resolve => setTimeout(resolve, 500)); // Simulate processing time
+                
+                const responses = {
+                    'budget': {
+                        success: true,
+                        data: {
+                            forecast: [
+                                { category: 'Food', predicted: 450, confidence: 0.89 },
+                                { category: 'Transport', predicted: 200, confidence: 0.92 },
+                                { category: 'Entertainment', predicted: 150, confidence: 0.85 }
+                            ],
+                            insights: ['Consider meal planning to reduce food costs', 'Transport spending is optimal'],
+                            monthly_savings_potential: 235
+                        },
+                        meta: { model: 'linear_regression_v2', confidence: 0.89 }
+                    },
+                    'esg': {
+                        success: true,
+                        data: {
+                            overall_score: 87,
+                            category_scores: {
+                                environmental: 85,
+                                social: 88,
+                                governance: 90
+                            },
+                            improvement_areas: ['Increase renewable energy investments', 'Enhance board diversity'],
+                            impact_analysis: {
+                                carbon_offset_tons: 24.5,
+                                renewable_energy_mwh: 450,
+                                jobs_supported: 156
+                            }
+                        },
+                        meta: { analysis_model: 'multi_objective_optimization_v3' }
+                    },
+                    'crypto': {
+                        success: true,
+                        data: {
+                            wallet_id: 'CRYPTO_' + Date.now(),
+                            balance: 2.45,
+                            currencies: {
+                                BTC: { amount: 0.023, value_usd: 1380, change_24h: 2.3 },
+                                ETH: { amount: 1.2, value_usd: 3600, change_24h: -1.2 }
+                            },
+                            security_score: 94
+                        },
+                        meta: { security_level: 'enterprise', encryption: 'elliptic_curve_secp256k1' }
+                    }
+                };
+                
+                return responses[message.agent] || { success: true, data: { message: 'Agent processed request' } };
+            }
+            
+            generateMessageId() {
+                return 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            }
+            
+            getAgentStatus(agentName) {
+                const agent = this.agents.get(agentName);
+                return agent ? agent.status : 'unknown';
+            }
+            
+            getAllAgents() {
+                return Array.from(this.agents.entries()).map(([name, data]) => ({
+                    name,
+                    ...data
+                }));
+            }
         }
 
-        // Close mobile nav when clicking outside
-        document.addEventListener('click', function(event) {
-            const navPillars = document.getElementById('navPillars');
-            const mobileToggle = document.querySelector('.mobile-nav-toggle');
-            const navContainer = document.querySelector('.nav-container');
+        // Navigation Optimization Agent (Graph Theory)
+        class NavigationAgent {
+            constructor() {
+                this.routes = new Map();
+                this.visitedNodes = new Set();
+                this.initializeRoutes();
+            }
             
-            if (!navContainer.contains(event.target)) {
-                navPillars.classList.remove('show');
+            initializeRoutes() {
+                // Define navigation graph (Dijkstra-optimized paths)
+                this.routes.set('dashboard', { path: '/', weight: 1 });
+                this.routes.set('wealth-guide', { path: '/wealth-guide', weight: 2 });
+                this.routes.set('vault-manager', { path: '/vault-manager', weight: 2 });
+                this.routes.set('market-pulse', { path: '/market-pulse', weight: 3 });
+                this.routes.set('trade-nexus', { path: '/trade-nexus', weight: 3 });
+                this.routes.set('insight-engine', { path: '/insight-engine', weight: 2 });
+                this.routes.set('budget-tracker', { path: '/budget-tracker', weight: 4 });
+                this.routes.set('crypto-wallet', { path: '/crypto-wallet', weight: 4 });
+                this.routes.set('esg-analyzer', { path: '/esg-analyzer', weight: 3 });
+                this.routes.set('community-forum', { path: '/community-forum', weight: 5 });
+            }
+            
+            findOptimalPath(start, end) {
+                // Simplified Dijkstra-like path finding
+                const paths = [
+                    { nodes: [start, end], weight: this.calculatePathWeight([start, end]) },
+                    { nodes: [start, 'dashboard', end], weight: this.calculatePathWeight([start, 'dashboard', end]) }
+                ];
+                
+                return paths.sort((a, b) => a.weight - b.weight)[0];
+            }
+            
+            calculatePathWeight(nodes) {
+                return nodes.reduce((total, node) => {
+                    return total + (this.routes.get(node)?.weight || 5);
+                }, 0);
+            }
+            
+            trackNavigation(path) {
+                path.forEach(node => this.visitedNodes.add(node));
+                this.optimizeWeights();
+            }
+            
+            optimizeWeights() {
+                // Adjust weights based on navigation frequency (reinforcement learning inspired)
+                this.visitedNodes.forEach(node => {
+                    const route = this.routes.get(node);
+                    if (route && route.weight > 1) {
+                        route.weight = Math.max(1, route.weight - 0.1);
+                    }
+                });
+            }
+        }
+
+        // =============================================
+        // INITIALIZE AGENTIC SYSTEM
+        // =============================================
+
+        const agentSystem = new AgentCommunication();
+        const navigationAgent = new NavigationAgent();
+
+        // Register all agents
+        agentSystem.registerAgent('budget', '/budget-tracker/api/analyze', ['spending_forecast', 'pattern_analysis']);
+        agentSystem.registerAgent('esg', '/esg-analyzer/api/analyze', ['sustainability_scoring', 'impact_analysis']);
+        agentSystem.registerAgent('crypto', '/crypto-wallet/api/wallet/create', ['wallet_management', 'security_analysis']);
+        agentSystem.registerAgent('navigation', '/api/navigation/optimize', ['path_optimization', 'user_behavior_analysis']);
+
+        // =============================================
+        // ENHANCED VOICE RECOGNITION WITH AGENT ROUTING
+        // =============================================
+
+        async function startVoiceRecognition() {
+            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+                const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+                recognition.continuous = false;
+                recognition.interimResults = false;
+                recognition.lang = 'en-US';
+                
+                // Show listening indicator
+                showVoiceIndicator(true);
+                
+                recognition.onresult = async function(event) {
+                    const command = event.results[0][0].transcript.toLowerCase();
+                    console.log('🎤 Voice command:', command);
+                    showVoiceIndicator(false);
+                    
+                    // Route to appropriate agent based on command analysis
+                    const response = await routeVoiceCommand(command);
+                    speakResponse(response);
+                };
+                
+                recognition.onerror = function(event) {
+                    console.error('Voice recognition error:', event.error);
+                    showVoiceIndicator(false);
+                    alert('Voice recognition error: ' + event.error);
+                };
+                
+                recognition.onend = function() {
+                    showVoiceIndicator(false);
+                };
+                
+                recognition.start();
+            } else {
+                alert('Voice recognition not supported in this browser. Using simulated agent interaction.');
+                // Fallback to simulated interaction
+                simulateVoiceInteraction();
+            }
+        }
+
+        async function routeVoiceCommand(command) {
+            // Analyze command and route to appropriate agent
+            if (command.includes('budget') || command.includes('spending') || command.includes('money')) {
+                const result = await agentSystem.communicate('budget', { 
+                    command, 
+                    context: 'voice_analysis',
+                    timestamp: Date.now()
+                });
+                return `Budget Agent: ${result.data?.insights?.[0] || 'Analyzing your spending patterns... I recommend reviewing your monthly expenses.'}`;
+                
+            } else if (command.includes('esg') || command.includes('sustainable') || command.includes('environment')) {
+                const result = await agentSystem.communicate('esg', { 
+                    command, 
+                    portfolio: 'current',
+                    analysis_depth: 'quick'
+                });
+                return `ESG Agent: Your sustainability score is ${result.data?.overall_score || '85'}%. ${result.data?.improvement_areas?.[0] || 'Consider adding more green investments.'}`;
+                
+            } else if (command.includes('crypto') || command.includes('bitcoin') || command.includes('wallet')) {
+                const result = await agentSystem.communicate('crypto', { 
+                    command,
+                    action: 'analyze_security'
+                });
+                return `Crypto Agent: Your wallet security score is ${result.data?.security_score || '94'}%. ${result.data?.currencies ? 'Portfolio looks diversified.' : 'Ready to manage your cryptocurrencies.'}`;
+                
+            } else if (command.includes('navigate') || command.includes('go to') || command.includes('show me')) {
+                const destination = extractDestination(command);
+                const optimalPath = navigationAgent.findOptimalPath('current', destination);
+                navigationAgent.trackNavigation(optimalPath.nodes);
+                return `Navigation Agent: Taking you to ${destination} via optimized path.`;
+                
+            } else {
+                // Default AI assistant response
+                return `AI Assistant: I understand "${command}". I can help with budgeting, ESG analysis, crypto management, or navigation. What would you like to focus on?`;
+            }
+        }
+
+        function extractDestination(command) {
+            const destinations = {
+                'dashboard': ['dashboard', 'home', 'main'],
+                'wealth guide': ['wealth', 'invest', 'guide'],
+                'vault manager': ['vault', 'portfolio', 'manage'],
+                'market pulse': ['market', 'stocks', 'pulse'],
+                'trade nexus': ['trade', 'buy', 'sell'],
+                'budget tracker': ['budget', 'spending', 'tracker'],
+                'crypto wallet': ['crypto', 'bitcoin', 'wallet'],
+                'esg analyzer': ['esg', 'sustainable', 'analyzer']
+            };
+            
+            for (const [dest, keywords] of Object.entries(destinations)) {
+                if (keywords.some(keyword => command.includes(keyword))) {
+                    return dest;
+                }
+            }
+            return 'dashboard';
+        }
+
+        function speakResponse(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.rate = 0.9;
+                utterance.pitch = 1.0;
+                utterance.volume = 0.8;
+                speechSynthesis.speak(utterance);
+            }
+            // Also show visual response
+            showAgentResponse(text);
+        }
+
+        function showVoiceIndicator(listening) {
+            let indicator = document.getElementById('voiceIndicator');
+            if (!indicator) {
+                indicator = document.createElement('div');
+                indicator.id = 'voiceIndicator';
+                indicator.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: var(--primary-gold);
+                    color: var(--dark-bg);
+                    padding: 2rem;
+                    border-radius: 20px;
+                    z-index: 10000;
+                    font-weight: bold;
+                    box-shadow: 0 10px 30px rgba(255,215,0,0.5);
+                    text-align: center;
+                `;
+                document.body.appendChild(indicator);
+            }
+            
+            if (listening) {
+                indicator.innerHTML = '<i class="fas fa-microphone fa-2x"></i><br>Listening...';
+                indicator.style.display = 'block';
+            } else {
+                indicator.style.display = 'none';
+            }
+        }
+
+        function showAgentResponse(text) {
+            let responseBox = document.getElementById('agentResponse');
+            if (!responseBox) {
+                responseBox = document.createElement('div');
+                responseBox.id = 'agentResponse';
+                responseBox.style.cssText = `
+                    position: fixed;
+                    bottom: 100px;
+                    right: 20px;
+                    background: var(--glass-bg);
+                    backdrop-filter: blur(20px);
+                    border: 1px solid var(--primary-gold);
+                    border-radius: 15px;
+                    padding: 1rem;
+                    max-width: 300px;
+                    z-index: 1000;
+                    font-size: 0.9rem;
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+                `;
+                document.body.appendChild(responseBox);
+            }
+            
+            responseBox.innerHTML = `
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                    <i class="fas fa-robot" style="color: var(--primary-gold);"></i>
+                    <strong>AI Assistant</strong>
+                </div>
+                <div>${text}</div>
+                <button onclick="this.parentElement.style.display='none'" style="
+                    background: none;
+                    border: none;
+                    color: var(--text-muted);
+                    position: absolute;
+                    top: 0.5rem;
+                    right: 0.5rem;
+                    cursor: pointer;
+                ">×</button>
+            `;
+            
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                if (responseBox) responseBox.style.display = 'none';
+            }, 10000);
+        }
+
+        function simulateVoiceInteraction() {
+            const commands = [
+                "Show me my budget",
+                "Analyze my ESG score", 
+                "How's my crypto wallet?",
+                "Navigate to wealth guide"
+            ];
+            
+            const randomCommand = commands[Math.floor(Math.random() * commands.length)];
+            showVoiceIndicator(true);
+            
+            setTimeout(() => {
+                showVoiceIndicator(false);
+                routeVoiceCommand(randomCommand).then(speakResponse);
+            }, 2000);
+        }
+
+        // =============================================
+        // ENHANCED CHATBOT WITH AGENT INTEGRATION
+        // =============================================
+
+        function openChatbot() {
+            const message = `AI Assistant: I'm connected to multiple specialized agents. I can help you with:
+• Budget analysis and spending forecasts
+• ESG portfolio scoring and sustainability insights  
+• Cryptocurrency wallet management and security
+• Navigation optimization and personalized recommendations
+
+What would you like to explore?`;
+            
+            showAgentResponse(message);
+        }
+
+        // =============================================
+        // CORE UI FUNCTIONALITY
+        // =============================================
+
+        // Dropdown functionality
+        function toggleDropdown() {
+            const dropdown = document.getElementById('dropdownContent');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('dropdownContent');
+            const dropdownBtn = document.querySelector('.dropdown-btn');
+            
+            if (!dropdown.contains(event.target) && !dropdownBtn.contains(event.target)) {
+                dropdown.classList.remove('show');
             }
         });
+
+        // Mobile navigation
+        function toggleMobileNav() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('show');
+        }
+
+        // Mode toggle
+        function toggleMode() {
+            document.body.classList.toggle('light-mode');
+            const icon = document.querySelector('.mode-toggle i');
+            icon.classList.toggle('fa-sun');
+            icon.classList.toggle('fa-moon');
+        }
+
+        // Personalized Greeting (Mock)
+        function setUserGreeting() {
+            const userName = localStorage.getItem('userName') || 'Investor'; // Mock from storage or API
+            document.getElementById('userGreeting').textContent = `Welcome back, ${userName}!`;
+        }
 
         // Update active navigation state
         function setActiveNav() {
             const currentPath = window.location.pathname;
-            const navLinks = document.querySelectorAll('.nav-link');
+            const links = document.querySelectorAll('.dropdown-link, .mobile-link');
             
-            navLinks.forEach(link => {
-                const linkPath = link.getAttribute('href');
-                if (currentPath === linkPath || 
-                    (currentPath.startsWith(linkPath) && linkPath !== '/')) {
-                    link.classList.add('active');
+            links.forEach(link => {
+                if (currentPath === link.getAttribute('href')) {
+                    link.style.background = 'rgba(255, 215, 0, 0.1)';
+                    link.style.borderLeft = '3px solid var(--primary-gold)';
                 }
             });
         }
 
-        // Call when page loads
-        document.addEventListener('DOMContentLoaded', setActiveNav);
-
-        // Close mobile nav when a link is clicked
-        document.querySelectorAll('.nav-pillars a').forEach(link => {
-            link.addEventListener('click', () => {
-                const navPillars = document.getElementById('navPillars');
-                navPillars.classList.remove('show');
+        // Enhanced chart initialization with stochastic data
+        function initCharts() {
+            // Wealth Chart - Line with Brownian motion simulation
+            new Chart(document.getElementById('wealthChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{ 
+                        data: generateStochasticData(65, 6, 5),
+                        borderColor: 'rgb(255, 215, 0)',
+                        backgroundColor: 'rgba(255, 215, 0, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: { 
+                    scales: { y: { beginAtZero: false } }, 
+                    plugins: { legend: { display: false } },
+                    animation: { duration: 2000, easing: 'easeOutQuart' }
+                }
             });
+
+            // Vault Chart - Pie with dynamic allocation
+            new Chart(document.getElementById('vaultChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Stocks', 'Bonds', 'Crypto', 'Real Estate'],
+                    datasets: [{ 
+                        data: [45, 25, 20, 10],
+                        backgroundColor: ['#FFD700', '#10B981', '#00d4ff', '#8B5CF6']
+                    }]
+                },
+                options: { 
+                    plugins: { legend: { position: 'bottom' } },
+                    cutout: '60%'
+                }
+            });
+
+            // Initialize other charts...
+            // [Keep the existing chart initialization code from previous version]
+        }
+
+        function generateStochasticData(start, count, volatility) {
+            const data = [start];
+            for (let i = 1; i < count; i++) {
+                const change = (Math.random() - 0.5) * volatility;
+                data.push(Math.max(0, data[i-1] + change));
+            }
+            return data;
+        }
+
+        // =============================================
+        // INITIALIZATION
+        // =============================================
+
+        document.addEventListener('DOMContentLoaded', () => {
+            setActiveNav();
+            setUserGreeting();
+            initCharts();
+            
+            // Log agent system status
+            console.log('🚀 Multi-Agent System Initialized:', agentSystem.getAllAgents());
+            console.log('🧭 Navigation Agent Ready:', navigationAgent.getAllAgents());
         });
+
+        // Export for global access if needed
+        window.agentSystem = agentSystem;
+        window.navigationAgent = navigationAgent;
     </script>
 </body>
 </html>
